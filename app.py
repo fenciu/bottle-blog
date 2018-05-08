@@ -1,4 +1,5 @@
-from bottle import Bottle,TEMPLATE_PATH,Route,static_file,template
+from bottle import Bottle,TEMPLATE_PATH,Route,static_file
+from bottle import jinja2_template as template, jinja2_view as view
 from views.index import index
 from plugins.dbconnect import dbConnectPlunin
 from plugins.PyMy import PyMySQLPlugin
@@ -9,15 +10,18 @@ TEMPLATE_PATH.append('template')
 #@route('/hello/<name>')
 app=Bottle()
 #app.mount('/views/',index)
-#dbs=dbConnectPlunin(db='phpdev',table='symbols',keyword='db', host='172.16.48.77', port=3306, username='root',password='123456')
-#app.install(dbs)
+db=dbConnectPlunin(db='blog',table='post',keyword='db', host='172.16.48.77', port=3306, username='root',password='123456')
+app.install(db)
 #pymysql = PyMySQLPlugin(user='root',password='123456', db='phpdev')
 #app.install(pymysql)
 @app.get('/')
-def defautl():
+def defautl(db):
     #db.default.symbols.get(header='1123')
     
-    return template('./index/index.html')
+    data=db.default.post.select('*')
+    #print(data.title)
+    
+    return template('./index/index.html',contents=data)
 @app.get('/css/<filename>')
 def server_static(filename):
     return static_file(filename,root='./static/css/')

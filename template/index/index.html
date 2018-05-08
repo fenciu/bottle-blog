@@ -1,3 +1,4 @@
+{% extends "./index/base.html" %}
 <!DOCTYPE HTML>
 <!--
 	Future Imperfect by HTML5 UP
@@ -6,14 +7,15 @@
 -->
 <html>
 	<!-- head -->
-	%include ./index/head.html
+	
+	
 	<body>
 
 		<!-- Wrapper -->
 			<div id="wrapper">
 
 				<!-- nv -->
-					%include ./index/nv.html
+				
 
 				
 
@@ -23,18 +25,19 @@
 					<div id="main">
 
 						<!-- Post -->
-						%include ./index/post.html
+						{% block post %}
 
 						<!-- Post -->
+						{%for content in contents %}
 							<article class="post">
 								<header>
 									<div class="title">
-										<h2><a href="#">Ultricies sed magna euismod enim vitae gravida</a></h2>
+										<h2><a href="#">{{content.title}}</a></h2>
 										<p>Lorem ipsum dolor amet nullam consequat etiam feugiat</p>
 									</div>
 									<div class="meta">
-										<time class="published" datetime="2015-10-25">October 25, 2015</time>
-										<a href="#" class="author"><span class="name">Jane Doe</span><img src="images/avatar.jpg" alt="" /></a>
+										<time class="published" datetime="2015-10-25">{{content.time}}</time>
+										<a href="#" class="author"><span class="name">{{content.author}}</span><img src="images/avatar.jpg" alt="" /></a>
 									</div>
 								</header>
 								<a href="#" class="image featured"><img src="images/pic02.jpg" alt="" /></a>
@@ -45,12 +48,13 @@
 									</ul>
 									<ul class="stats">
 										<li><a href="#">General</a></li>
-										<li><a href="#" class="icon fa-heart">28</a></li>
+										<li><a href="#" class="icon fa-heart">{{content.like}}</a></li>
 										<li><a href="#" class="icon fa-comment">128</a></li>
 									</ul>
 								</footer>
 							</article>
-
+						{% endfor %}
+						{% endblock %}
 						<!-- Post -->
 							<article class="post">
 								<header>
@@ -401,7 +405,7 @@ print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
 					</div>
 
 				<!-- Sidebar -->
-					%include ./index/sidebar.html
+					
 
 			</div>
 

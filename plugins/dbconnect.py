@@ -34,16 +34,15 @@ class dbConnectPlunin(object):
                 user=self.username,
                 passwd=self.password,
                 db=self.db,
+                charset='utf8',
                 autocommit=True,
                 pool_size=8,
                 wait_timeout=30) 
             kwargs[self.keyword] = db
             try:
                 rvs=callback(*args,**kwargs)
-                
-
             except :
                 print('error')
 
-            return rvs
+            return callback(*args,**kwargs)
         return wrapper
