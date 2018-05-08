@@ -1,0 +1,1 @@
+<h1>{{index.get_url('foxx',name=name)}}</h1>
