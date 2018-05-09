@@ -1,0 +1,94 @@
+{% extends './admin/blank-page.html' %} {% block page_wrapper %}
+<div id="page-wrapper">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h1>Blank Page
+                <small>A Blank Slate</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="index.html">
+                        <i class="icon-dashboard"></i> Dashboard</a>
+                </li>
+                <li class="active">
+                    <i class="icon-file-alt"></i> Blank Page</li>
+            </ol>
+        </div>
+    </div>
+    <!-- /.row -->
+    <div id="post-wrapper">
+        <div class="col-lg-12">
+            <h2>Bordered Table</h2>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover tablesorter">
+                    <thead>
+                        <tr>
+                            <th class="header">id
+                                <i class="fa fa-sort"></i>
+                            </th>
+                            <th class="header">多选
+                                <i class="fa fa-sort"></i>
+                            </th>
+                            <th class="header">文章标题
+                                <i class="fa fa-sort"></i>
+                            </th>
+                            <th class="header">文章作者
+                                <i class="fa fa-sort"></i>
+                            </th>
+                            <th class="header">文章分类
+                                <i class="fa fa-sort"></i>
+                            </th>
+                            <th class="header">发表时间
+                                <i class="fa fa-sort"></i>
+                            </th>
+                            <th class="header">操作
+                                <i class="fa fa-sort"></i>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for post in article %}
+                        <tr>
+                            <td>{% post.id %}</td>
+                            <td>
+
+                                <input type="checkbox" name="optionsRadios" id="optionsRadios2" value="option2">
+                            </td>
+                            <td>{% post.title %}</td>
+                            <td>{% post.author %}</td>
+                            <td>{% post.classify %}</td>
+                            <td>{% post.time %}</td>
+                            <td></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <ul class="pagination">
+                    <li class="disabled">
+                        <a href="#">«</a>
+                    </li>
+                    <li class="active">
+                        <a href="#">1</a>
+                    </li>
+                    <li>
+                        <a href="#">2</a>
+                    </li>
+                    <li>
+                        <a href="#">3</a>
+                    </li>
+                    <li>
+                        <a href="#">4</a>
+                    </li>
+                    <li>
+                        <a href="#">5</a>
+                    </li>
+                    <li>
+                        <a href="#">»</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /#page-wrapper -->
+    {% endblock %}
