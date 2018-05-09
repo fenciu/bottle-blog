@@ -1,10 +1,9 @@
 from bottle import Bottle,jinja2_template as template,jinja2_view as view,static_file
 from plugins.dbconnect import dbConnectPlunin
 
-
 admin=Bottle()
-db=dbConnectPlunin(db='blog',table='post',keyword='db', host='172.16.48.77', port=3306, username='root',password='123456')
-admin.install(db)
+dbs=dbConnectPlunin(db='blog',table='post',keyword='dbs', host='172.16.48.77', port=3306, username='root',password='123456')
+admin.install(dbs)
 
 @admin.get('/index/',name='index')
 @view('./admin/index.html')
@@ -12,14 +11,16 @@ def index():
     
     return dict(name='s')
 
+
 @admin.get('/index/article/',name='article')
-@view('./admin/article.html')
-def article(db):
-    data=db.default.post.select('*')
-    return dict(article=data)
+def article(dbs):
+    
+    data=dbs.default.post.select('*')
+    return template('./admin/article.html',article=data)
 
 @admin.get('/index/<name>/<filename>')
 def server_static(filename,name):
+    
     root_str='./static/%s/' %name
     
     return static_file(filename,root=root_str)

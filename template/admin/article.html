@@ -50,15 +50,15 @@
                     <tbody>
                         {% for post in article %}
                         <tr>
-                            <td>{% post.id %}</td>
+                            <td>{{post.id}}</td>
                             <td>
 
                                 <input type="checkbox" name="optionsRadios" id="optionsRadios2" value="option2">
                             </td>
-                            <td>{% post.title %}</td>
-                            <td>{% post.author %}</td>
-                            <td>{% post.classify %}</td>
-                            <td>{% post.time %}</td>
+                            <td>{{post.title}}</td>
+                            <td>{{post.author}}</td>
+                            <td>{{post.classify}}</td>
+                            <td>{{post.time}}</td>
                             <td></td>
                         </tr>
                         {% endfor %}

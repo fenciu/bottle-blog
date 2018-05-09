@@ -38,4 +38,4 @@ print()
 #app.get_url('foxx')
 
 #app.run(host='localhost',port=8081,debug=True,reloader=True)
-app.run(host='localhost',port=8081,debug=True,reloader=True)
+app.run(host='localhost',port=8081,debug=True)
