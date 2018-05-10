@@ -26,7 +26,7 @@ def defautl(db):
     return template('./index/index.html',contents=data)
 
 @app.get('/<namedir>/<filename>')
-def server_static(filename):
+def server_static(filename,namedir):
     root_str='./static/%s/' %namedir
     return static_file(filename,root=root_str)
 print()
