@@ -1,0 +1,31 @@
+
+.control-label{
+    line-height: 34px;
+}
+
+.form-group {
+    padding: 15px;
+
+
+}
+@keyframes fade-in {  
+    0% {opacity: 0;width: 0%;}/*初始状态 透明度为0*/  
+    40% {opacity: 0;width: 5%;}/*过渡状态 透明度为0*/  
+    100% {opacity: 1;width: 10%;}/*结束状态 透明度为1*/  
+}  
+.panel-subtitle{
+    width: 10%;
+    overflow: hidden;
+    white-space:nowrap; 
+    border-bottom: 2px solid transparent;
+    border-bottom-color: #00AAFF;
+    animation: fade-in;/*动画名称*/  
+    animation-duration: 2.5s;/*动画持续时间*/  
+    -webkit-animation:fade-in 1.5s;/*针对webkit内核*/  
+    
+}
+
+#wrapper > div.main > div > div > div > div > div > div.panel-body > table > tbody > tr > td {
+    line-height: 25px;
+
+}

@@ -21,6 +21,25 @@ def article(dbs):
     data=dbs.default.post.select('*')
     return template('./admin/article.html',article=data)
 
+@admin.get('/article/add',name='article_url')
+def add_article():
+    return template('./admin/add_article.html')
+
+
+@admin.get('/article/assets/<namedir1>/<namedir2>/<namedir3>/<filename>')
+def server_static(filename,namedir1,namedir2,namedir3):
+    root_str='./static/admin/%s/%s/%s/' %(namedir1,namedir2,namedir3)
+    return static_file(filename,root=root_str)
+
+@admin.get('/article/assets/<namedir1>/<namedir2>/<filename>')
+def server_static(filename,namedir1,namedir2):
+    root_str='./static/admin/%s/%s/' %(namedir1,namedir2)
+    return static_file(filename,root=root_str)
+
+@admin.get('/article/assets/<namedir1>/<filename>')
+def server_static(filename,namedir1):
+    root_str='./static/admin/%s/' %(namedir1)
+    return static_file(filename,root=root_str)
 
 
 

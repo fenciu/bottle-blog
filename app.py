@@ -29,6 +29,8 @@ def defautl(db):
 def server_static(filename,namedir):
     root_str='./static/%s/' %namedir
     return static_file(filename,root=root_str)
+
+
 print()
 #SimpleTemplate.defaults['get_url']=app.get_url
 #app.route('/',callback=hello)
