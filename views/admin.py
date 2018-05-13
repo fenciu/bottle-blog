@@ -1,8 +1,8 @@
-from bottle import Bottle,jinja2_template as template,jinja2_view as view,static_file,BaseTemplate
+from bottle import Bottle,jinja2_template as template,jinja2_view as view,static_file,BaseTemplate,request
 from plugins.dbconnect import dbConnectPlunin
 
 admin=Bottle()
-dbs=dbConnectPlunin(db='blog',table='post',keyword='dbs', host='172.16.48.77', port=3306, username='root',password='123456')
+dbs=dbConnectPlunin(db='blog',table='post',keyword='dbs', host='', port=3306, username='root',password='123asdzxc')
 admin.install(dbs)
 
 BaseTemplate.defaults['url']=admin.get_url
@@ -21,22 +21,37 @@ def article(dbs):
     data=dbs.default.post.select('*')
     return template('./admin/article.html',article=data)
 
-@admin.get('/article/add',name='article_url')
-def add_article():
+@admin.get('/article/add',name='add_article_url')
+def add_article(dbs):
+    data=dbs.default.post.select('*')
+   
     return template('./admin/add_article.html')
+@admin.post('/article/add',name='add_article_url')
+def add_article():
+    
+    data=request.forms.content
+    for pro in request.forms:
+        print(getattr(request.forms,pro))
 
+    print(data)
+    return data
+    
+@admin.get('/article/<namedir1>/<namedir2>/<namedir3>/<namedir4>/<filename>')
+def server_static(filename,namedir1,namedir2,namedir3,namedir4):
+    root_str='./static/admin/%s/%s/%s/%s/' %(namedir1,namedir2,namedir3,namedir4)
+    return static_file(filename,root=root_str)
 
-@admin.get('/article/assets/<namedir1>/<namedir2>/<namedir3>/<filename>')
+@admin.get('/article/<namedir1>/<namedir2>/<namedir3>/<filename>')
 def server_static(filename,namedir1,namedir2,namedir3):
     root_str='./static/admin/%s/%s/%s/' %(namedir1,namedir2,namedir3)
     return static_file(filename,root=root_str)
 
-@admin.get('/article/assets/<namedir1>/<namedir2>/<filename>')
+@admin.get('/article/<namedir1>/<namedir2>/<filename>')
 def server_static(filename,namedir1,namedir2):
     root_str='./static/admin/%s/%s/' %(namedir1,namedir2)
     return static_file(filename,root=root_str)
 
-@admin.get('/article/assets/<namedir1>/<filename>')
+@admin.get('/article/<namedir1>/<filename>')
 def server_static(filename,namedir1):
     root_str='./static/admin/%s/' %(namedir1)
     return static_file(filename,root=root_str)

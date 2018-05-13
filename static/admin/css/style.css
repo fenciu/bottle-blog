@@ -13,7 +13,7 @@
     40% {opacity: 0;width: 5%;}/*过渡状态 透明度为0*/  
     100% {opacity: 1;width: 10%;}/*结束状态 透明度为1*/  
 }  
-.panel-subtitle{
+.panel-subtitles{
     width: 10%;
     overflow: hidden;
     white-space:nowrap; 
@@ -28,4 +28,67 @@
 #wrapper > div.main > div > div > div > div > div > div.panel-body > table > tbody > tr > td {
     line-height: 25px;
 
+}
+#wrapper > div.main > div > div > div > div > div > div.panel-body > form > div:nth-child(4) > div:nth-child(2) > input{
+    outline: none;
+}
+.check-switch{
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    height: 20px;
+    width: 40px;
+    background-color:rgb(194, 187, 187);
+    outline: none;
+    line-height: 34px;
+    border-radius: 10px;
+    box-shadow: #dfdfdf 0 0 0 0 inset;
+    
+}
+.check-switch:checked{
+    background-color:rgba(0, 170, 255, 0.479)
+    
+    
+}
+.check-switch::before{
+    content: attr();
+    height: 19px;
+    width: 19px;
+    left: 15px;
+    position: absolute;
+    background-color: #fff;
+    border-radius: 10px;
+    transition: all 0.3s;
+    box-shadow: #dfdfdf 0 0 0 0 inset;
+
+}
+.check-switch:checked::before{
+   
+    left: 35px;
+    background-color: #00AAFF;
+    
+}
+
+.check-tag{
+    -webkit-appearance: none;
+    height: 20px;
+    width: 60px;
+    background-color:rgb(194, 187, 187);
+    outline: none;
+    line-height: 34px;
+    border-radius: 10px;
+    box-shadow: #dfdfdf 0 0 0 0 inset;
+    
+}
+
+
+.check-tag::before{
+    width: 60px;
+    height: 30px;
+
+}
+
+.check-tag + .label-tag{
+    position: relative;
+    top: 0;
+    left: 0;
 }
