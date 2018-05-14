@@ -6,7 +6,7 @@ from plugins.dbconnect import dbConnectPlunin
 from plugins.PyMy import PyMySQLPlugin
 TEMPLATE_PATH.remove('./views/')
 TEMPLATE_PATH.append('template')
-    
+ #   
 #@route('/')
 #@route('/hello/<name>')
 app=Bottle()
