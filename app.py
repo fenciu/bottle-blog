@@ -12,7 +12,7 @@ TEMPLATE_PATH.append('template')
 app=Bottle()
 
 
-db=dbConnectPlunin(db='blog',table='post',keyword='db', host='', port=3306, username='root',password='123asdzxc')
+db=dbConnectPlunin(db='blog',table='*',keyword='db', host='', port=3306, username='root',password='123asdzxc')
 app.install(db)
 app.mount('/views/',index)
 app.mount('/admin/',admin)

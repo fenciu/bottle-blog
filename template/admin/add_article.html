@@ -43,8 +43,9 @@
                                             <span for="classify" class="col-sm-1 control-label">分类</span>
                                             <div class="col-sm-4">
                                                 <select name="classify" class="form-control">
-                                                    <option value="新闻">新闻</option>
-                                                    <option value="技术">技术</option>
+                                                    {% for classify in data_classify %}
+                                                    <option value="{{classify.id}}">{{classify.name}}</option>
+                                                    {% endfor %}
 
                                                 </select>
                                             </div>
@@ -65,14 +66,9 @@
                                         <div class="form-group">
                                             <span for="show" class="col-sm-2 control-label">标签</span>
                                             <div class="col-sm-4">
-                                                    <input id="tag_id1" name="tag_id1" class="check-tag" type="checkbox" > </input>
-                                                    <label for="tag_id1" class="label-tag">JAVA</label>
-                                                    <input id="tag_id2" name="tag_id2" class="check-tag" type="checkbox" > 
-                                                    <label for="tag_id2" class="label-tag">Python</label>
-                                                    <input id="tag_id3" name="tag_id3" class="check-tag" type="checkbox" > 
-                                                    <label for="tag_id3" class="label-tag">PHP</label>
-                                                    <input id="tag_id4" name="tag_id4" class="check-tag" type="checkbox" > 
-                                                    <label for="tag_id4" class="label-tag">Nodejs</label>
+                                                {% for tag in data_tag %}
+                                                    <input  name='tag' class="check-tag" type="checkbox" value="{{tag.id}}" tag_name="{{tag.name}}">
+                                                    {% endfor %}
                                                     
 
                                                     

@@ -2,7 +2,7 @@ from bottle import Bottle,jinja2_template as template,jinja2_view as view,static
 from plugins.dbconnect import dbConnectPlunin
 
 admin=Bottle()
-dbs=dbConnectPlunin(db='blog',table='post',keyword='dbs', host='', port=3306, username='root',password='123asdzxc')
+dbs=dbConnectPlunin(db='blog',table='*',keyword='dbs', host='', port=3306, username='root',password='123asdzxc')
 admin.install(dbs)
 
 BaseTemplate.defaults['url']=admin.get_url
@@ -23,18 +23,28 @@ def article(dbs):
 
 @admin.get('/article/add',name='add_article_url')
 def add_article(dbs):
-    data=dbs.default.post.select('*')
+    data_classify=dbs.default.classify.select('*')
+    data_tag=dbs.default.tag.select('*')
    
-    return template('./admin/add_article.html')
-@admin.post('/article/add',name='add_article_url')
-def add_article():
-    
-    data=request.forms.content
-    for pro in request.forms:
-        print(getattr(request.forms,pro))
+   
+    return template('./admin/add_article.html',data_classify=data_classify,data_tag=data_tag)
 
-    print(data)
-    return data
+#接受文章数据
+@admin.post('/article/add',name='add_article_url')
+def add_article(dbs):
+    #验证数据（待补充）
+    data=request.forms.content
+    data_create=dbs.default.post.bulk_create
+    post_dict={}
+    for pro in request.forms:
+        #post_dict[pro]=getattr(request.forms,pro)
+        print(pro+":"+getattr(request.forms,pro))
+       
+
+    #print(post_dict)
+    #data_create=dbs.default.post.bulk_create(post_dict)
+    
+    return post_dict
     
 @admin.get('/article/<namedir1>/<namedir2>/<namedir3>/<namedir4>/<filename>')
 def server_static(filename,namedir1,namedir2,namedir3,namedir4):

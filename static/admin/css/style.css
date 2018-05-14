@@ -32,6 +32,7 @@
 #wrapper > div.main > div > div > div > div > div > div.panel-body > form > div:nth-child(4) > div:nth-child(2) > input{
     outline: none;
 }
+
 .check-switch{
     -moz-appearance: none;
     -webkit-appearance: none;
@@ -50,7 +51,7 @@
     
 }
 .check-switch::before{
-    content: attr();
+    content: '';
     height: 19px;
     width: 19px;
     left: 15px;
@@ -70,25 +71,36 @@
 
 .check-tag{
     -webkit-appearance: none;
-    height: 20px;
-    width: 60px;
-    background-color:rgb(194, 187, 187);
-    outline: none;
-    line-height: 34px;
-    border-radius: 10px;
-    box-shadow: #dfdfdf 0 0 0 0 inset;
+    
+   
     
 }
-
-
-.check-tag::before{
-    width: 60px;
-    height: 30px;
-
+input[class='check-tag']:focus{
+    outline: none;
 }
 
-.check-tag + .label-tag{
-    position: relative;
-    top: 0;
-    left: 0;
+.check-tag::before{
+    height: 35px;
+    content: attr(tag_name);
+    width: 70px;
+    background-color:rgb(255, 255, 255);
+    outline: none;
+    line-height: 35px;
+    border-radius: 3px;
+    box-shadow: #aaa7a7 0 0 0 0 inset;
+    border-color: #aaa7a7;
+    border-width: 1px;
+    border-style: solid;
+    display: block;
+    text-align: center;
+
+    
+    
+
+}
+.check-tag:checked::before{
+    
+    border-color: #66afe9;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
+
 }
