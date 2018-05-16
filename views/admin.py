@@ -44,13 +44,14 @@ def add_article(dbs):
         tag_str=','.join(request.forms.dict['tag'])
         post_dict['tag']=tag_str
         del post_dict['files']
+    if post_dict['post_time']=='':
         del post_dict['post_time']
     
     print(post_dict)
     post_list=[]
     post_list.append(post_dict)
     data_create=dbs.default.post.bulk_create(post_list)
-    print(dbs.default.post.bulk_create(post_list).sql)
+    #print(dbs.default.post.bulk_create(post_list).sql)
     #test_data=[{'title': '我的第一个web', 'author': 'admin','tag':'1'}]
     #data_create=dbs.default.post.bulk_create(test_data) 
     
