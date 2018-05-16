@@ -2,7 +2,7 @@ from bottle import Bottle,jinja2_template as template,jinja2_view as view,static
 from plugins.dbconnect import dbConnectPlunin
 
 admin=Bottle()
-dbs=dbConnectPlunin(db='blog',table='*',keyword='dbs', host='167.160.180.189', port=3306, username='root',password='123asdzxc')
+dbs=dbConnectPlunin(db='blog',table='*',keyword='dbs', host='', port=3306, username='root',password='123asdzxc')
 admin.install(dbs)
 
 BaseTemplate.defaults['url']=admin.get_url
