@@ -1815,9 +1815,10 @@ class MultiDict(DictMixin):
         normal dict in that it returns only the newest value for any given key.
         There are special methods available to access the full list of values.
     """
-
+    
     def __init__(self, *a, **k):
         self.dict = dict((k, [v]) for (k, v) in dict(*a, **k).items())
+        
 
     def __len__(self): return len(self.dict)
     def __iter__(self): return iter(self.dict)
@@ -1848,6 +1849,7 @@ class MultiDict(DictMixin):
             return ((k, v) for k, vl in self.dict.iteritems() for v in vl)
         def allitems(self):
             return [(k, v) for k, vl in self.dict.iteritems() for v in vl]
+   
 
     def get(self, key, default=None, index=-1, type=None):
         ''' Return the most recent value for a key.
@@ -1898,7 +1900,7 @@ class FormsDict(MultiDict):
     recode_unicode = True
 
     def _fix(self, s, encoding=None):
-        if isinstance(s, unicode) and self.recode_unicode: # Python 3 WSGI
+        if isinstance(s, unicode) and self.recode_unicode: # Python 3 WSGIa
             return s.encode('latin1').decode(encoding or self.input_encoding)
         elif isinstance(s, bytes): # Python 2 WSGI
             return s.decode(encoding or self.input_encoding)

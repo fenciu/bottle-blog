@@ -39,10 +39,10 @@ class dbConnectPlunin(object):
                 pool_size=8,
                 wait_timeout=30) 
             kwargs[self.keyword] = db
-            try:
-                rvs=callback(*args,**kwargs)
-            except :
-                print('error')
+            
+            rv=callback(*args,**kwargs)
+            
+                
 
-            return callback(*args,**kwargs)
+            return rv
         return wrapper

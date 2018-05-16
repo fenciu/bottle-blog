@@ -2,7 +2,7 @@ from bottle import Bottle,jinja2_template as template,jinja2_view as view,static
 from plugins.dbconnect import dbConnectPlunin
 
 admin=Bottle()
-dbs=dbConnectPlunin(db='blog',table='*',keyword='dbs', host='', port=3306, username='root',password='123asdzxc')
+dbs=dbConnectPlunin(db='blog',table='*',keyword='dbs', host='167.160.180.189', port=3306, username='root',password='123asdzxc')
 admin.install(dbs)
 
 BaseTemplate.defaults['url']=admin.get_url
@@ -33,18 +33,29 @@ def add_article(dbs):
 @admin.post('/article/add',name='add_article_url')
 def add_article(dbs):
     #验证数据（待补充）
-    data=request.forms.content
-    data_create=dbs.default.post.bulk_create
+    # data=request.forms.content
+    # #data_create=dbs.default.post.bulk_create
     post_dict={}
     for pro in request.forms:
-        #post_dict[pro]=getattr(request.forms,pro)
+        post_dict[pro]=getattr(request.forms,pro)
         print(pro+":"+getattr(request.forms,pro))
        
-
-    #print(post_dict)
-    #data_create=dbs.default.post.bulk_create(post_dict)
+    if request.forms.dict['tag']:
+        tag_str=','.join(request.forms.dict['tag'])
+        post_dict['tag']=tag_str
+        del post_dict['files']
+        del post_dict['post_time']
     
-    return post_dict
+    print(post_dict)
+    post_list=[]
+    post_list.append(post_dict)
+    data_create=dbs.default.post.bulk_create(post_list)
+    print(dbs.default.post.bulk_create(post_list).sql)
+    #test_data=[{'title': '我的第一个web', 'author': 'admin','tag':'1'}]
+    #data_create=dbs.default.post.bulk_create(test_data) 
+    
+    
+    return 'data_create'
     
 @admin.get('/article/<namedir1>/<namedir2>/<namedir3>/<namedir4>/<filename>')
 def server_static(filename,namedir1,namedir2,namedir3,namedir4):

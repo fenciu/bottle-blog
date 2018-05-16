@@ -583,10 +583,12 @@ class QuerySet:
                 vals = list(o.values()) + ondup_vals
                 n, _ = self.conn.execute(sql, *vals)
                 affected_rows += n
+            print(sql)
             return affected_rows
         else:
             sql = u"insert{} into {} ({}) values ({})".format(ignore_s, self.table_name, fields, tokens)
             args = [list(o.values()) for o in obj_list]
+            print(sql)
             return self.conn.execute_many(sql, args)
 
     def count(self):

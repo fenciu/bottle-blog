@@ -12,7 +12,7 @@ TEMPLATE_PATH.append('template')
 app=Bottle()
 
 
-db=dbConnectPlunin(db='blog',table='*',keyword='db', host='', port=3306, username='root',password='123asdzxc')
+db=dbConnectPlunin(db='blog',table='*',keyword='db', host='167.160.180.189', port=3306, username='root',password='123asdzxc')
 app.install(db)
 app.mount('/views/',index)
 app.mount('/admin/',admin)
@@ -21,6 +21,7 @@ def defautl(db):
     #db.default.symbols.get(header='1123')
     
     data=db.default.post.select('*')
+    print('text')
     #print(data.title)
     
     return template('./index/index.html',contents=data)
@@ -30,8 +31,12 @@ def server_static(filename,namedir):
     root_str='./static/%s/' %namedir
     return static_file(filename,root=root_str)
 
+@app.route('/s')
+def text(db):
+    print('s')
+    return 's'
 
-print()
+
 #SimpleTemplate.defaults['get_url']=app.get_url
 #app.route('/',callback=hello)
 #app.route('/hello/<name>',callback=hello,name='foxx')
