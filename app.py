@@ -15,25 +15,28 @@ app.install(setting.db)
 app.mount('/views/',index)
 app.mount('/admin/',admin)
 
-##首页
+##首页和分页(五篇文章)
 @app.get('/')
-def defautl(db):
-    #db.default.symbols.get(header='1123')
+@app.get('/page/<count:int>',name='page_url')#翻页路由 count页数 默认1
+def defautl(db,count=1):
     
-    data=db.default.post.select('*')
-  
-    #print(data.title)
     
-    return template('./index/index.html',contents=data)
+    data=db.default.post.filter(show='off')
+    fetch_data=data[(count-1)*5:count*5]
+    
+    max_count=data.count()/5 if (data.count()%5==0) else data.count()//5+1 #最大页数
+    
+    
+    return template('./index/index.html',contents=fetch_data,max_count=max_count,count=count)
 
 ##翻页
-@app.get('/page/<count:int>',name='page_url')
-def page(db,count):
-    fetch_data=db.default.post.filter(show='off')[(count-1)*5:count*5]
-    data=db.default.post.select('*')
-    for fetch in fetch_data:
-        print(fetch)
-    return template('./index/index.html',contents=data,count=count)
+# @app.get('/page/<count:int>',name='page_url')
+# def page(db,count):
+#     fetch_data=db.default.post.filter(show='off')[(count-1)*5:count*5]
+#     data=db.default.post.select('*')
+#     for fetch in fetch_data:
+#         print(fetch)
+#     return template('./index/index.html',contents=data,count=count)
 
 @app.get('/<namedir>/<filename>')
 def server_static(filename,namedir):

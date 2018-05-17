@@ -469,8 +469,22 @@ print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
 
 						<!-- Pagination -->
 							<ul class="actions pagination">
-								<li><a href="{{url('page_url',count=count-1)}}" class="disabled button big previous">Previous Page</a></li>
-								<li><a href="{{url('page_url',count=count)}}" class="button big next">Next Page</a></li>
+									
+								{% if count==1 %}
+								
+								<li><a href="{{url('page_url',count=count)}}" class="disabled button big previous">Previous Page</a></li>
+								{% else %}
+								
+								<li><a href="{{url('page_url',count=count-1)}}" class=" button big previous">Previous Page</a></li>
+								{% endif %}
+								
+								{% if count<max_count %}
+								<li><a href="{{url('page_url',count=count+1)}}" class="button big next">Next Page</a></li>
+								{% else %}
+								<li><a href="{{url('page_url',count=count+1)}}" class="disabled button big next">Next Page</a></li>
+								{% endif %}
+								
+								
 							</ul>
 
 					</div>
