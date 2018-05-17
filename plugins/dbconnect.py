@@ -5,14 +5,18 @@ import inspect
 class dbConnectPlunin(object):
     name='mysqlconnect'
     api=2
-    def __init__(self,db,table,keyword,host,port,username,password):
-        self.db=db
-        self.table=table
-        self.keyword=keyword
-        self.host=host
-        self.port=port
-        self.username=username
-        self.password=password
+    def __init__(self,config):
+        self.db=config['db']
+        self.table=config['table']
+        self.keyword=config['keyword']
+        self.host=config['host']
+        self.port=config['port']
+        self.username=config['username']
+        self.password=config['password']
+        self.charset=config['charset']
+        self.autocommit=config['autocommit']
+        self.pool_size=config['pool_size']
+        self.wait_timeout=config['wait_timeout']
 
     def setup(self,app):
         for other in app.plugins:
@@ -34,10 +38,10 @@ class dbConnectPlunin(object):
                 user=self.username,
                 passwd=self.password,
                 db=self.db,
-                charset='utf8',
-                autocommit=True,
-                pool_size=8,
-                wait_timeout=30) 
+                charset=self.charset,
+                autocommit=self.autocommit,
+                pool_size=self.pool_size,
+                wait_timeout=self.wait_timeout) 
             kwargs[self.keyword] = db
             
             rv=callback(*args,**kwargs)

@@ -1,35 +1,45 @@
-from bottle import Bottle,TEMPLATE_PATH,Route,static_file
+from bottle import Bottle,TEMPLATE_PATH,Route,static_file,BaseTemplate
 from bottle import jinja2_template as template, jinja2_view as view
 from views.admin import admin
 from views.index import index
-from plugins.dbconnect import dbConnectPlunin
-from plugins.PyMy import PyMySQLPlugin
-TEMPLATE_PATH.remove('./views/')
-TEMPLATE_PATH.append('template')
- #   
+import setting
+
+
 #@route('/')
 #@route('/hello/<name>')
 app=Bottle()
 
+BaseTemplate.defaults['url']=app.get_url
 
-db=dbConnectPlunin(db='blog',table='*',keyword='db', host='', port=3306, username='root',password='123asdzxc')
-app.install(db)
+app.install(setting.db)
 app.mount('/views/',index)
 app.mount('/admin/',admin)
+
+##首页
 @app.get('/')
 def defautl(db):
     #db.default.symbols.get(header='1123')
     
     data=db.default.post.select('*')
-    print('text')
+  
     #print(data.title)
     
     return template('./index/index.html',contents=data)
+
+##翻页
+@app.get('/page/<count:int>',name='page_url')
+def page(db,count):
+    fetch_data=db.default.post.filter(show='off')[(count-1)*5:count*5]
+    data=db.default.post.select('*')
+    for fetch in fetch_data:
+        print(fetch)
+    return template('./index/index.html',contents=data,count=count)
 
 @app.get('/<namedir>/<filename>')
 def server_static(filename,namedir):
     root_str='./static/%s/' %namedir
     return static_file(filename,root=root_str)
+
 
 @app.route('/s')
 def text(db):

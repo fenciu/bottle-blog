@@ -1,9 +1,10 @@
 from bottle import Bottle,jinja2_template as template,jinja2_view as view,static_file,BaseTemplate,request
 from plugins.dbconnect import dbConnectPlunin
+import setting
 
 admin=Bottle()
-dbs=dbConnectPlunin(db='blog',table='*',keyword='dbs', host='', port=3306, username='root',password='123asdzxc')
-admin.install(dbs)
+
+admin.install(setting.db)
 
 BaseTemplate.defaults['url']=admin.get_url
 
@@ -16,15 +17,15 @@ def index():
 
 #后台文章页
 @admin.get('/article/',name='article_url')
-def article(dbs):
+def article(db):
     
-    data=dbs.default.post.select('*')
+    data=db.default.post.select('*')
     return template('./admin/article.html',article=data)
 
 @admin.get('/article/add',name='add_article_url')
-def add_article(dbs):
-    data_classify=dbs.default.classify.select('*')
-    data_tag=dbs.default.tag.select('*')
+def add_article(db):
+    data_classify=db.default.classify.select('*')
+    data_tag=db.default.tag.select('*')
    
    
     return template('./admin/add_article.html',data_classify=data_classify,data_tag=data_tag)
@@ -50,7 +51,7 @@ def add_article(dbs):
     print(post_dict)
     post_list=[]
     post_list.append(post_dict)
-    data_create=dbs.default.post.bulk_create(post_list)
+    data_create=db.default.post.bulk_create(post_list)
     #print(dbs.default.post.bulk_create(post_list).sql)
     #test_data=[{'title': '我的第一个web', 'author': 'admin','tag':'1'}]
     #data_create=dbs.default.post.bulk_create(test_data) 
