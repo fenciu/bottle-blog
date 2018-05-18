@@ -25,7 +25,10 @@ def defautl(db,count=1):
     fetch_data=data[(count-1)*5:count*5]
     
     max_count=data.count()/5 if (data.count()%5==0) else data.count()//5+1 #最大页数
-    
+    #select post.*,group_concat(tag.name) from post, tag where find_in_set(tag.id, post.tag)  group by post.id
+
+    tag=db.default.execute("select *,post.title,group_concat(name) as tag_name from post,tag where instr(post.tag,tag.id) group by post.id,post.title and post.show='off' ")
+    print(tag)
     
     return template('./index/index.html',contents=fetch_data,max_count=max_count,count=count)
 
