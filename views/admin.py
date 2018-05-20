@@ -1,5 +1,6 @@
-from bottle import Bottle,jinja2_template as template,jinja2_view as view,static_file,BaseTemplate,request
+from bottle import Bottle,jinja2_template as template,jinja2_view as view,static_file,BaseTemplate,request,abort
 from plugins.dbconnect import dbConnectPlunin
+import os,random,string
 import setting
 
 admin=Bottle()
@@ -12,13 +13,11 @@ BaseTemplate.defaults['url']=admin.get_url
 @admin.get('/index/',name='index_url')
 @view('./admin/index.html')
 def index():
-    
     return dict(name='s')
 
 #后台文章页
 @admin.get('/article/',name='article_url')
 def article(db):
-    
     data=db.default.post.select('*')
     return template('./admin/article.html',article=data)
 
@@ -32,7 +31,7 @@ def add_article(db):
 
 #接受文章数据
 @admin.post('/article/add',name='add_article_url')
-def add_article(dbs):
+def add_article(db):
     #验证数据（待补充）
     # data=request.forms.content
     # #data_create=dbs.default.post.bulk_create
@@ -44,7 +43,7 @@ def add_article(dbs):
     if request.forms.dict['tag']:
         tag_str=','.join(request.forms.dict['tag'])
         post_dict['tag']=tag_str
-        del post_dict['files']
+        
     if post_dict['post_time']=='':
         del post_dict['post_time']
     
@@ -58,26 +57,54 @@ def add_article(dbs):
     
     
     return 'data_create'
-    
-@admin.get('/article/<namedir1>/<namedir2>/<namedir3>/<namedir4>/<filename>')
-def server_static(filename,namedir1,namedir2,namedir3,namedir4):
+
+##上传图片
+@admin.post('/article/upload',name='upload_img_url')
+def upload():
+    upload=request.files.get('files')
+    name, ext = os.path.splitext(upload.filename)
+    if ext not in ('.png','.jpg','.jpeg'):
+        return abort(code=404)
+    else:
+        random_name=''.join(random.sample(string.ascii_letters + string.digits, 16))
+        
+        upload.filename = ''.join((random_name,ext))
+    save_path ='./static/post/images/'
+    upload.save(save_path) # appends upload.filename automatically
+    return upload.filename
+
+@admin.get('/classify/',name='classify_img_url')
+def classify():
+    return template('./admin/classify.html')
+
+@admin.get('/article/<filename>')
+def server_static(filename):
+    root_str='./static/post/images/'
+    return static_file(filename,root=root_str)
+
+@admin.get('/<namedir0>/<namedir1>/<namedir2>/<namedir3>/<namedir4>/<filename>')
+def server_static(filename,namedir1,namedir2,namedir3,namedir4,namedir0):
     root_str='./static/admin/%s/%s/%s/%s/' %(namedir1,namedir2,namedir3,namedir4)
     return static_file(filename,root=root_str)
 
-@admin.get('/article/<namedir1>/<namedir2>/<namedir3>/<filename>')
-def server_static(filename,namedir1,namedir2,namedir3):
+@admin.get('/<namedir0>/<namedir1>/<namedir2>/<namedir3>/<filename>')
+def server_static(filename,namedir1,namedir2,namedir3,namedir0):
     root_str='./static/admin/%s/%s/%s/' %(namedir1,namedir2,namedir3)
     return static_file(filename,root=root_str)
 
-@admin.get('/article/<namedir1>/<namedir2>/<filename>')
-def server_static(filename,namedir1,namedir2):
+@admin.get('/<namedir0>/<namedir1>/<namedir2>/<filename>')
+def server_static(filename,namedir1,namedir2,namedir0):
     root_str='./static/admin/%s/%s/' %(namedir1,namedir2)
     return static_file(filename,root=root_str)
 
-@admin.get('/article/<namedir1>/<filename>')
-def server_static(filename,namedir1):
+@admin.get('/<namedir0>/<namedir1>/<filename>')
+def server_static(filename,namedir1,namedir0):
     root_str='./static/admin/%s/' %(namedir1)
     return static_file(filename,root=root_str)
+
+
+
+
 
 
 

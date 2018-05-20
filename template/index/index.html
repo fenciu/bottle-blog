@@ -25,12 +25,12 @@
 	<footer>
 		<ul class="actions">
 			<li>
-				<a href="#" class="button big">Continue Reading</a>
+				<a href="{{url('post_url',id=content.id)}}" class="button big">Continue Reading</a>
 			</li>
 		</ul>
 		<ul class="stats">
 			<li>
-				<a href="#">General</a>
+				<a href="#">{{content.classify_name}}</a>
 			</li>
 			<li>
 				<a href="#" class="icon fa-heart">{{content.like}}</a>
@@ -41,4 +41,26 @@
 		</ul>
 	</footer>
 </article>
-{% endfor %} {% endblock %}
+
+{% endfor %} 
+<!-- Pagination -->
+<ul class="actions pagination">
+									
+	{% if count==1 %}
+	
+	<li><a href="{{url('page_url',count=count)}}" class="disabled button big previous">Previous Page</a></li>
+	{% else %}
+	
+	<li><a href="{{url('page_url',count=count-1)}}" class=" button big previous">Previous Page</a></li>
+	{% endif %}
+	
+	{% if count<max_count %}
+	<li><a href="{{url('page_url',count=count+1)}}" class="button big next">Next Page</a></li>
+	{% else %}
+	<li><a href="{{url('page_url',count=count+1)}}" class="disabled button big next">Next Page</a></li>
+	{% endif %}
+	
+	
+</ul>
+
+{% endblock %}

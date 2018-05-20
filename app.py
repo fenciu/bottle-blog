@@ -20,26 +20,27 @@ app.mount('/admin/',admin)
 @app.get('/page/<count:int>',name='page_url')#翻页路由 count页数 默认1
 def defautl(db,count=1):
     
-    
-    data=db.default.post.filter(show='off')
+    str_sql="select post.*,group_concat(tag.name) as tag_name,classify.name as classify_name from post, tag,classify where find_in_set(tag.id, post.tag)  and post.show='off' and classify.id=post.classify group by post.id"
+    data=db.default.fetchall_dict(str_sql)
+    fetch_data_count=db.default.execute(str_sql)[0]
     fetch_data=data[(count-1)*5:count*5]
-    
-    max_count=data.count()/5 if (data.count()%5==0) else data.count()//5+1 #最大页数
-    #select post.*,group_concat(tag.name) from post, tag where find_in_set(tag.id, post.tag)  group by post.id
-
-    tag=db.default.execute("select *,post.title,group_concat(name) as tag_name from post,tag where instr(post.tag,tag.id) group by post.id,post.title and post.show='off' ")
-    print(tag)
-    
+    max_count=fetch_data_count/5 if (fetch_data_count%5==0) else fetch_data_count//5+1 #最大页数
     return template('./index/index.html',contents=fetch_data,max_count=max_count,count=count)
 
-##翻页
-# @app.get('/page/<count:int>',name='page_url')
-# def page(db,count):
-#     fetch_data=db.default.post.filter(show='off')[(count-1)*5:count*5]
-#     data=db.default.post.select('*')
-#     for fetch in fetch_data:
-#         print(fetch)
-#     return template('./index/index.html',contents=data,count=count)
+@app.get('/post/<id:int>',name='post_url')
+def Show_post(db,id):
+    str_sql="select post.*,group_concat(tag.name) as tag_name,classify.name as classify_name from post, tag,classify where find_in_set(tag.id, post.tag)  and post.show='off' and post.id=%s and classify.id=post.classify group by post.id" %id
+    data=db.default.fetchone_dict(str_sql)
+    
+
+
+    return template('./article/single.html',contents=data)
+
+
+@app.get('/post/<filename>')
+def server_static(filename):
+    root_str='./static/post/images/'
+    return static_file(filename,root=root_str)
 
 @app.get('/<namedir>/<filename>')
 def server_static(filename,namedir):
@@ -47,10 +48,10 @@ def server_static(filename,namedir):
     return static_file(filename,root=root_str)
 
 
-@app.route('/s')
-def text(db):
-    print('s')
-    return 's'
+
+
+
+
 
 
 #SimpleTemplate.defaults['get_url']=app.get_url

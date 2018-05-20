@@ -467,30 +467,12 @@ print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
 							</article>
 						-->
 
-						<!-- Pagination -->
-							<ul class="actions pagination">
-									
-								{% if count==1 %}
-								
-								<li><a href="{{url('page_url',count=count)}}" class="disabled button big previous">Previous Page</a></li>
-								{% else %}
-								
-								<li><a href="{{url('page_url',count=count-1)}}" class=" button big previous">Previous Page</a></li>
-								{% endif %}
-								
-								{% if count<max_count %}
-								<li><a href="{{url('page_url',count=count+1)}}" class="button big next">Next Page</a></li>
-								{% else %}
-								<li><a href="{{url('page_url',count=count+1)}}" class="disabled button big next">Next Page</a></li>
-								{% endif %}
-								
-								
-							</ul>
+						
 
 					</div>
-
+				{% block sidebar %} 
 				<!-- Sidebar -->
-                    
+                   
                     <section id="sidebar">
                         
                             <!-- Intro -->
@@ -695,16 +677,16 @@ print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
                             </section>
                         
                         </section>
-                   
+                   {% endblock %}
 
 			</div>
 
 		<!-- Scripts -->
-			<script src="/assets/js/jquery.min.js"></script>
-			<script src="/assets/js/skel.min.js"></script>
-			<script src="/assets/js/util.js"></script>
-			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
-			<script src="/assets/js/main.js"></script>
+			<script src="/js/jquery.min.js"></script>
+			<script src="/js/skel.min.js"></script>
+			<script src="/js/util.js"></script>
+			<!--[if lte IE 8]><script src="/js/ie/respond.min.js"></script><![endif]-->
+			<script src="/js/main.js"></script>
 
 	</body>
 </html>
