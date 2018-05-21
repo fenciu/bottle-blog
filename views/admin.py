@@ -43,6 +43,7 @@ def add_article(db):
     if 'tag' in request.forms.dict.keys():
         tag_str=','.join(request.forms.dict['tag'])
         post_dict['tag']=tag_str
+    
         
     if post_dict['post_time']=='':
         del post_dict['post_time']
