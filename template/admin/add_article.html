@@ -24,7 +24,7 @@
                             <p class="panel-subtitle">添加、修改、删除文章</p>
                         </div>
                         <div class="panel-body">
-                            <form method="post" accept-charset="utf-8" class="from_cl " >
+                            <form id="post_article" method="post" accept-charset="utf-8" class="from_cl " onsubmit="return false;" >
                                 <div class="form-group">
                                     <span for="title" class="col-sm-1 control-label">标题</span>
                                     <div class="col-sm-8">
@@ -101,7 +101,7 @@
                                 <div class="form-group">
 
                                     <div class="col-sm-1">
-                                        <button type="submit" class="btn btn-default">提交</button>
+                                        <button onclick="post_article()" class="btn btn-default">提交</button>
 
                                     </div>
                                     <div class="col-sm-1">
@@ -161,6 +161,27 @@
         });
 
 
+    }
+    function post_article(){
+        $.ajax({
+            data:$('#post_article').serialize(),
+            type:"POST",
+            url:"",
+            cache:false,
+            contentType:false,
+            processData:false,
+            success:function(url){
+                $('.modal-body').text('发表成功！'); 
+                $('#errormes').modal('show');
+            },
+            error:function(error){
+                $('.modal-body').text('发表失败'); 
+                $('#errormes').modal('show');
+            }
+            
+            
+        });
+        return false;
     }
 </script>
 

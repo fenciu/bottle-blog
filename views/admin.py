@@ -39,14 +39,16 @@ def add_article(db):
     for pro in request.forms:
         post_dict[pro]=getattr(request.forms,pro)
         print(pro+":"+getattr(request.forms,pro))
-       
-    if request.forms.dict['tag']:
+    print(type(request.forms.dict))   
+    if 'tag' in request.forms.dict.keys():
         tag_str=','.join(request.forms.dict['tag'])
         post_dict['tag']=tag_str
         
     if post_dict['post_time']=='':
         del post_dict['post_time']
     
+    if 'files' in request.forms.dict.keys():
+        del post_dict['files']
     print(post_dict)
     post_list=[]
     post_list.append(post_dict)
@@ -56,7 +58,7 @@ def add_article(db):
     #data_create=dbs.default.post.bulk_create(test_data) 
     
     
-    return 'data_create'
+    
 
 ##上传图片
 @admin.post('/article/upload',name='upload_img_url')
