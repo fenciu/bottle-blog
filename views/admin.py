@@ -1,4 +1,4 @@
-from bottle import Bottle,jinja2_template as template,jinja2_view as view,static_file,BaseTemplate,request,abort
+from bottle import Bottle,jinja2_template as template,jinja2_view as view,static_file,BaseTemplate,request,abort,TEMPLATES
 from plugins.dbconnect import dbConnectPlunin
 import os,random,string
 import setting
@@ -7,11 +7,11 @@ admin=Bottle()
 
 admin.install(setting.db)
 
-BaseTemplate.defaults['url']=admin.get_url
+BaseTemplate.defaults['urls']=admin.get_url
+TEMPLATES.clear()
 
 #后台首页
 @admin.get('/index/',name='index_url')
-@view('./admin/index.html')
 def index():
     return dict(name='s')
 
@@ -19,15 +19,34 @@ def index():
 @admin.get('/article/',name='article_url')
 def article(db):
     data=db.default.post.select('*')
-    return template('./admin/article.html',article=data)
-
+    return template('./admin/article.html',article=data,act_article='active')
+#添加文章
 @admin.get('/article/add',name='add_article_url')
 def add_article(db):
     data_classify=db.default.classify.select('*')
     data_tag=db.default.tag.select('*')
    
    
-    return template('./admin/add_article.html',data_classify=data_classify,data_tag=data_tag)
+    return template('./admin/add_article.html',data_classify=data_classify,data_tag=data_tag,act_article='active')
+
+#修改文章
+@admin.get('/article/modify?<id:int>')
+def modify_article(id,db):
+    data=db.default.post.filter(id=id).first()
+    print(data)
+    return template('./admin/modify.html')
+
+#分类
+@admin.get('/classify/',name='classify_url')
+def teclassify(db):
+    return template('./admin/classify.html' ,act_classify='active')
+
+#标签
+@admin.get('/tag/',name='tag_url')
+def tag(db):
+    return template('./admin/tag.html',act_tag='active')
+
+
 
 #接受文章数据
 @admin.post('/article/add',name='add_article_url')
@@ -43,8 +62,8 @@ def add_article(db):
     if 'tag' in request.forms.dict.keys():
         tag_str=','.join(request.forms.dict['tag'])
         post_dict['tag']=tag_str
-    
-        
+
+
     if post_dict['post_time']=='':
         del post_dict['post_time']
     
@@ -76,9 +95,6 @@ def upload():
     upload.save(save_path) # appends upload.filename automatically
     return upload.filename
 
-@admin.get('/classify/',name='classify_img_url')
-def classify():
-    return template('./admin/classify.html')
 
 @admin.get('/article/<filename>')
 def server_static(filename):
