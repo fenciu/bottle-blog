@@ -569,6 +569,7 @@ class QuerySet:
             return
         kw = obj_list[0]
         tokens = u','.join(['%s']*len(kw))
+        
         fields = [u"`{}`".format(k) for k in kw.keys()]
         fields = u','.join(fields)
         ignore_s = u' IGNORE' if ignore else ''
@@ -624,9 +625,58 @@ class QuerySet:
         cond, cond_vals = self.make_where(self.cond_list, self.cond_dict, self.exclude_list, self.exclude_dict)
         update_fields, update_vals = self.make_update_fields(args, kw)
         vals = update_vals + cond_vals 
+        
         sql = u"update {} set {} {}".format(self.table_name, update_fields, cond)
+        
         n, _ = self.conn.execute(sql, *vals)
+        
         return n
+
+    def bulk_update(self, obj_list, ignore=False):
+        "Returns affectrows"
+        if not obj_list:
+            return
+        kw = obj_list[0]
+        
+        tokens = u','.join(['=%s']*len(kw))
+        
+        fields = [u"`{}`".format(k) for k in kw.keys()]
+        fields = u','.join(fields)
+      
+        ignore_s = u' IGNORE' if ignore else ''
+        ondup_s = ''
+        ondup_vals = []
+        cond, cond_vals = self.make_where(self.cond_list, self.cond_dict, self.exclude_list, self.exclude_dict)
+      
+        
+        print(cond)
+        if self.ondup_list or self.ondup_dict:
+            update_fields, ondup_vals = self.make_update_fields(self.ondup_list, self.ondup_dict)
+            ondup_s = u' ON DUPLICATE KEY UPDATE ' + update_fields
+            #sql = u"insert{} into {} ({}) values ({}){}".format(ignore_s, self.table_name, fields, tokens, ondup_s)
+            sql = u"update {} set {} {}".format(self.table_name, fields, tokens,cond)
+            affected_rows = 0
+            for o in obj_list:
+                vals = list(o.values()) + ondup_vals
+                n, _ = self.conn.execute(sql, *vals)
+                affected_rows += n
+            
+            return affected_rows
+        else:
+            #sql = u"insert{} into {} ({}) values ({})".format(ignore_s, self.table_name, fields, tokens)
+            sql = u"update {} set {} {} {}".format(self.table_name,fields,tokens,cond)
+            
+            args = [list(o.values()) for o in obj_list]
+            ks=list(list(o.values()) for o in obj_list)
+            ks.append(cond_vals)
+            print(ks)
+            #args.append(cond_vals)
+            args=args.append(cond_vals)
+            print(sum(args,[]))
+            print(args)
+            print(cond_vals)
+            print(self.conn.execute_many(sql, args))
+            return self.conn.execute_many(sql, args)
 
     def delete(self, *names):
         "return affected rows"

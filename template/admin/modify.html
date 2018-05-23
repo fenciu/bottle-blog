@@ -28,13 +28,13 @@
                                 <div class="form-group">
                                     <span for="title" class="col-sm-1 control-label">标题</span>
                                     <div class="col-sm-8">
-                                        <input name="title" type="text" class="form-control " placeholder="title">
+                                        <input name="title" type="text" class="form-control " placeholder="title" value="{{content.title}}">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <span for="author" class="col-sm-1 control-label">作者</span>
                                     <div class="col-sm-3">
-                                        <input name="author" type="text" class="form-control " placeholder="author">
+                                        <input name="author" type="text" class="form-control " placeholder="author" value="{{content.author}}">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -42,31 +42,39 @@
                                     <div class="col-sm-4">
                                         <select name="classify" class="form-control">
                                             {% for classify in data_classify %}
-                                            <option value="{{classify.id}}">{{classify.name}}</option>
+                                            <option value="{{classify.id}}" {% if content.classify == classify.id %}selected{% endif %} >{{classify.name}}</option>
                                             {% endfor %}
 
                                         </select>
                                     </div>
                                     <span for="classify" class="col-sm-1 control-label">时间</span>
                                     <div class="col-sm-4">
-                                        <input name="post_time" type="text" class="form-control " placeholder="留空则默认当前时间">
+                                        <input name="post_time" type="text" class="form-control " placeholder="留空则默认当前时间" value="{{content.post_time}}">
                                         
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <span for="show" class="col-sm-2 control-label">是否显示</span>
                                     <div class="col-sm-4">
-                                        <input name="show" class="check-switch" type="checkbox">
+                                        
+                                        <input name="show" class="check-switch" type="checkbox" {% if content.show == 'on' %}checked{% endif %}>
                                     </div>
                                     <span for="top" class="col-sm-2 control-label">是否置顶</span>
                                     <div class="col-sm-4">
-                                        <input name="top" class="check-switch" type="checkbox"> </div>
+                                        <input name="top" class="check-switch" type="checkbox" {% if content.top == 'on' %}checked{% endif %}> </div>
                                 </div>
                                 <div class="form-group">
                                     <span for="show" class="col-sm-2 control-label">标签</span>
                                     <div class="col-sm-4">
-                                        {% for tag in data_tag %} {% if tag.id!=-1 %}
-                                        <input name='tag' class="check-tag" type="checkbox" value="{{tag.id}}" tag_name="{{tag.name}}"> {% endif %} {% endfor %}
+                                        {% set list_tag=content.tag.split(',') %}
+                                       
+                                        {% for tag in data_tag %}
+                                            
+                                            {% if tag.id!=-1 %}
+                                                
+                                                <input name='tag' class="check-tag" type="checkbox" value="{{tag.id}}" tag_name="{{tag.name}}" {% if tag.id|string in list_tag %}checked{% endif %}> 
+                                            {% endif %} 
+                                        {% endfor %}
 
 
 
@@ -77,7 +85,7 @@
                                 <div class="form-group">
 
                                     <div>
-                                        <textarea name='content' id="summernote"></textarea>
+                                        <textarea name='content' id="summernote">{{content.content}}</textarea>
                                         <div id="errormes" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
                                                 <div class="modal-dialog modal-sm" role="document">
                                                         <div class="modal-content">
@@ -128,6 +136,7 @@
 {% block scripts_bottom %}
 
 <script>
+
     $('#summernote').summernote({
         placeholder: '输入内容',
         tabsize: 2,
@@ -171,11 +180,11 @@
             contentType:false,
             processData:false,
             success:function(url){
-                $('.modal-body').text('发表成功！'); 
+                $('.modal-body').text('修改成功！'); 
                 $('#errormes').modal('show');
             },
             error:function(error){
-                $('.modal-body').text('发表失败'); 
+                $('.modal-body').text('修改失败'); 
                 $('#errormes').modal('show');
             }
             

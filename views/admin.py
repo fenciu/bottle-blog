@@ -30,12 +30,39 @@ def add_article(db):
     return template('./admin/add_article.html',data_classify=data_classify,data_tag=data_tag,act_article='active')
 
 #修改文章
-@admin.get('/article/modify?<id:int>')
+@admin.get('/article/modify=<id:int>')
 def modify_article(id,db):
     data=db.default.post.filter(id=id).first()
+    data_tag=db.default.tag.select('*')
+    data_classify=db.default.classify.select('*')
+    #{% if content.classify == classify.id|string %}selected{% endif %}
     print(data)
-    return template('./admin/modify.html')
+    return template('./admin/modify.html',content=data,data_tag=data_tag,data_classify=data_classify)
+#接受修改文章
+@admin.post('/article/modify=<id:int>')
+def modify_article(id,db):
+    post_dict={}
+    for pro in request.forms:
+        post_dict[pro]=getattr(request.forms,pro)
+        print(pro+":"+getattr(request.forms,pro))
+    print(type(request.forms.dict))   
+    if 'tag' in request.forms.dict.keys():
+        tag_str=','.join(request.forms.dict['tag'])
+        post_dict['tag']=tag_str
 
+
+    if post_dict['post_time']=='':
+        del post_dict['post_time']
+    
+    if 'files' in request.forms.dict.keys():
+        del post_dict['files']
+    post_list=[]
+    post_list.append(post_dict)
+    lity=[{'title':'wo','top':'off'}]
+    data_update=db.default.post.filter(id=1).bulk_update(lity)
+    #data_update=db.default.post.filter(id=1).update(title='we ')
+
+    
 #分类
 @admin.get('/classify/',name='classify_url')
 def teclassify(db):
@@ -69,14 +96,9 @@ def add_article(db):
     
     if 'files' in request.forms.dict.keys():
         del post_dict['files']
-    print(post_dict)
     post_list=[]
     post_list.append(post_dict)
     data_create=db.default.post.bulk_create(post_list)
-    #print(dbs.default.post.bulk_create(post_list).sql)
-    #test_data=[{'title': '我的第一个web', 'author': 'admin','tag':'1'}]
-    #data_create=dbs.default.post.bulk_create(test_data) 
-    
     
     
 
