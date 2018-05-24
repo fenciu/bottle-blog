@@ -48,8 +48,8 @@
 										<td>{{posts.classify}}</td>
 										<td>{{posts.show}}</td>
 										<td>
-											<button type="button" class="btn btn-success btn-xs">
-												<i class="fa fa-check-circle"></i> Success</button>
+											<a href="{{urls('modify_url',id=posts.id)}}"><button type="button" class="btn btn-success btn-xs">
+												<i class="fa fa-check-circle"></i> Success</button></a>
 											<button type="button" class="btn btn-danger btn-xs">
 												<i class="fa fa-trash-o"></i> Danger</button>
 										</td>
