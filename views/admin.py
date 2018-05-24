@@ -1,6 +1,6 @@
-from bottle import Bottle,jinja2_template as template,jinja2_view as view,static_file,BaseTemplate,request,abort,TEMPLATES
+from bottle import Bottle,jinja2_template as template,jinja2_view as view,static_file,BaseTemplate,request,response,abort,TEMPLATES,redirect
 from plugins.dbconnect import dbConnectPlunin
-import os,random,string
+import os,random,string,hashlib
 import setting
 
 admin=Bottle()
@@ -9,10 +9,52 @@ admin.install(setting.db)
 
 BaseTemplate.defaults['urls']=admin.get_url
 TEMPLATES.clear()
+##后台cookie检测
+def check_cookie():
+    def decorator(callback):
+        def wrapper(*args,**kwargs):
+            print(kwargs)
+            
+            
+            if request.get_cookie("id",secret="2018")==None:
+                redirect('/admin/login/')
+            else:
+                re=request.get_cookie("id",secret="2018")
+                re1,re2=re.split(':', 1 )
+                
+               
+            return callback(*args,**kwargs)
+        return wrapper
+    return decorator
+#登陆界面
+@admin.get('/login/')
+def login_view():
+    return template('./admin/login.html')
+
+@admin.post('/login/')
+def login_post(db):
+    sec=hashlib.blake2b()
+    sec.update(request.forms.userpass.encode(encoding='utf-8'))
+    username=request.forms.username
+    userpass=sec.hexdigest()
+    fetch_data=db.default.Conadmin.filter(username=username,userpass=userpass).select('login_time').first()
+    if fetch_data:
+        response.set_cookie("id",username+':'+userpass,secret="2018",httponly=True,path='/admin')
+        re=request.get_cookie("id",secret="2018")
+        print(re)
+        redirect(admin.get_url('index_url'))
+    else:
+        return 'fail'
+
+    
 
 #后台首页
-@admin.get('/index/',name='index_url')
-def index():
+@admin.get('/index/<id>',name='index_url')
+@check_cookie()
+def index(id):
+    #fetch_data=db.default.Conadmin.filter(username=re1,userpass=re2).select('id').first()
+    #if not fetch_data:
+    #    redirect('/admin/login/')
     return dict(name='s')
 
 #后台文章页
