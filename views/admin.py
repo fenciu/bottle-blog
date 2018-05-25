@@ -9,25 +9,20 @@ admin.install(setting.db)
 
 BaseTemplate.defaults['urls']=admin.get_url
 TEMPLATES.clear()
+
 ##后台cookie检测
-def check_cookie():
-    def decorator(callback):
-        def wrapper(*args,**kwargs):
-            print(kwargs)
-            
-            
-            if request.get_cookie("id",secret="2018")==None:
-                redirect('/admin/login/')
-            else:
-                re=request.get_cookie("id",secret="2018")
-                re1,re2=re.split(':', 1 )
-                
-               
-            return callback(*args,**kwargs)
-        return wrapper
-    return decorator
+def check_login(db,request):
+    if request.get_cookie("id",secret="2018")==None:
+        redirect('/admin/login/')
+    else:         
+        re=request.get_cookie("id",secret="2018")
+        re1,re2=re.split(':', 1 )
+        fetch_data=db.default.Conadmin.filter(username=re1,userpass=re2).select('id').first()
+        if not fetch_data:
+            redirect('/admin/login/')
+
 #登陆界面
-@admin.get('/login/')
+@admin.get('/login/',name='login_url')
 def login_view():
     return template('./admin/login.html')
 
@@ -45,26 +40,29 @@ def login_post(db):
         redirect(admin.get_url('index_url'))
     else:
         return 'fail'
-
-    
+#退出登陆
+@admin.get('/logout/',name='logout_url')
+def logout():
+    response.delete_cookie(key='id',path='/admin')
+    redirect(admin.get_url('login_url'))
 
 #后台首页
-@admin.get('/index/<id>',name='index_url')
-@check_cookie()
-def index(id):
-    #fetch_data=db.default.Conadmin.filter(username=re1,userpass=re2).select('id').first()
-    #if not fetch_data:
-    #    redirect('/admin/login/')
-    return dict(name='s')
+@admin.get('/index/',name='index_url')
+def index(db):
+    setting.check_login(db,request)
+    
+    return template('./admin/index.html',act_index='active')
 
 #后台文章页
 @admin.get('/article/',name='article_url')
 def article(db):
+    setting.check_login(db,request)
     data=db.default.post.select('*')
     return template('./admin/article.html',article=data,act_article='active')
 #添加文章
 @admin.get('/article/add',name='add_article_url')
 def add_article(db):
+    setting.check_login(db,request)
     data_classify=db.default.classify.select('*')
     data_tag=db.default.tag.select('*')
     return template('./admin/add_article.html',data_classify=data_classify,data_tag=data_tag,act_article='active')
@@ -72,6 +70,7 @@ def add_article(db):
 #修改文章
 @admin.get('/article/modify=<id:int>')
 def modify_article(id,db):
+    setting.check_login(db,request)
     data=db.default.post.filter(id=id).first()
     data_tag=db.default.tag.select('*')
     data_classify=db.default.classify.select('*')
@@ -79,6 +78,7 @@ def modify_article(id,db):
 #接受修改文章
 @admin.post('/article/modify=<id:int>',name='modify_url')
 def modify_article(id,db):
+    setting.check_login(db,request)
     post_dict={}
     for pro in request.forms:
         post_dict[pro]=getattr(request.forms,pro)
@@ -102,11 +102,13 @@ def modify_article(id,db):
 #分类
 @admin.get('/classify/',name='classify_url')
 def teclassify(db):
+    setting.check_login(db,request)
     return template('./admin/classify.html' ,act_classify='active')
 
 #标签
 @admin.get('/tag/',name='tag_url')
 def tag(db):
+    setting.check_login(db,request)
     return template('./admin/tag.html',act_tag='active')
 
 
@@ -114,6 +116,7 @@ def tag(db):
 #接受文章数据
 @admin.post('/article/add',name='add_article_url')
 def add_article(db):
+    setting.check_login(db,request)
     #验证数据（待补充）
     # data=request.forms.content
     # #data_create=dbs.default.post.bulk_create
@@ -140,7 +143,8 @@ def add_article(db):
 
 ##上传图片
 @admin.post('/article/upload',name='upload_img_url')
-def upload():
+def upload(db):
+    setting.check_login(db,request)
     upload=request.files.get('files')
     name, ext = os.path.splitext(upload.filename)
     if ext not in ('.png','.jpg','.jpeg'):

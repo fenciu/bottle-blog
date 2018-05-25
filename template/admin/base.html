@@ -81,7 +81,7 @@
 								<li><a href="#"><i class="lnr lnr-user"></i> <span>My Profile</span></a></li>
 								<li><a href="#"><i class="lnr lnr-envelope"></i> <span>Message</span></a></li>
 								<li><a href="#"><i class="lnr lnr-cog"></i> <span>Settings</span></a></li>
-								<li><a href="#"><i class="lnr lnr-exit"></i> <span>Logout</span></a></li>
+								<li><a href="{{urls('logout_url')}}"><i class="lnr lnr-exit"></i> <span>Logout</span></a></li>
 							</ul>
 						</li>
 						<!-- <li>
@@ -121,7 +121,7 @@
 		</div>
 		<!-- END LEFT SIDEBAR -->
 		<!-- MAIN -->
-		{% block main_body%}
+		{% block main_body %}
 		<div class="main">
 			<!-- MAIN CONTENT -->
 			<div class="main-content">
@@ -161,13 +161,17 @@
 	</div>
 	<!-- END WRAPPER -->
 	<!-- Javascript -->
-	{% block scripts_bottom %}
 	
+	<script src="vendor/jquery/jquery.min.js"></script>
+	<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+	<script src="vendor/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+	<script src="vendor/jquery.easy-pie-chart/jquery.easypiechart.min.js"></script>
+	<script src="vendor/chartist/js/chartist.min.js"></script>
+	<script src="scripts/klorofil-common.js"></script>
+	{% block scripts_bottom %}
 	{% endblock %}
 	
-	<!--<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-	<script src="vendor/jquery-slimscroll/jquery.slimscroll.min.js"></script>
-	<script src="scripts/klorofil-common.js"></script>-->
+	
 </body>
 
 </html>
