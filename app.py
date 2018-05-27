@@ -20,7 +20,7 @@ app.mount('/admin/',admin)
 @app.get('/page/<count:int>',name='page_url')#翻页路由 count页数 默认1
 def defautl(db,count=1):
     
-    str_sql="select post.*,group_concat(tag.name) as tag_name,classify.name as classify_name from post, tag,classify where find_in_set(tag.id, post.tag)  and post.show='off' and classify.id=post.classify group by post.id"
+    str_sql="select post.*,classify.name as classify_name from post,classify where   post.show='off' and classify.id=post.classify group by post.id"
     data=db.default.fetchall_dict(str_sql)
     fetch_data_count=db.default.execute(str_sql)[0]
     fetch_data=data[(count-1)*5:count*5]
@@ -29,7 +29,7 @@ def defautl(db,count=1):
 
 @app.get('/post/<id:int>',name='post_url')
 def Show_post(db,id):
-    str_sql="select post.*,group_concat(tag.name) as tag_name,classify.name as classify_name from post, tag,classify where find_in_set(tag.id, post.tag)  and post.show='off' and post.id=%s and classify.id=post.classify group by post.id" %id
+    str_sql="select post.*,classify.name as classify_name from post,classify where   post.show='off' and post.id=%s and classify.id=post.classify group by post.id" %id
     data=db.default.fetchone_dict(str_sql)
     
 

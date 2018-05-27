@@ -584,12 +584,10 @@ class QuerySet:
                 vals = list(o.values()) + ondup_vals
                 n, _ = self.conn.execute(sql, *vals)
                 affected_rows += n
-            print(sql)
             return affected_rows
         else:
             sql = u"insert{} into {} ({}) values ({})".format(ignore_s, self.table_name, fields, tokens)
             args = [list(o.values()) for o in obj_list]
-            print(sql)
             return self.conn.execute_many(sql, args)
 
     def count(self):
@@ -637,8 +635,7 @@ class QuerySet:
         "Returns affectrows"
         if not obj_list:
             return
-        kw = obj_list[0]
-    
+        kw = obj_list[0]   
         fields = [u"`{}`{}".format(k,'=%s') for k in kw.keys()]
         fields = u','.join(fields)      
         ignore_s = u' IGNORE' if ignore else ''
@@ -646,7 +643,6 @@ class QuerySet:
         ondup_vals = []
         cond, cond_vals = self.make_where(self.cond_list, self.cond_dict, self.exclude_list, self.exclude_dict)
         sql = u"update {} set {} {}".format(self.table_name,fields,cond)      
-        print(sql) 
         args = [list(o.values()) for o in obj_list]
         args[0]=args[0]+cond_vals 
         return self.conn.execute_many(sql, args)

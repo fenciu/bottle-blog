@@ -8,7 +8,7 @@
 			<h2>
 				<a href="#">{{content.title | safe}}</a>
 			</h2>
-			<p>Lorem ipsum dolor amet nullam consequat etiam feugiat</p>
+			<p>{{content.tag.replace(',','')|striptags|safe}}</p>
 		</div>
 		<div class="meta">
 			<time class="published" datetime="2015-10-25">{{content.post_time}}</time>
@@ -19,7 +19,7 @@
 		</div>
 	</header>
 	<a href="#" class="image featured">
-		<img src="/images/pic02.jpg" alt="" />
+		<!-- <img src="/images/pic02.jpg" alt="" /> -->
 	</a>
 	{{content.content|striptags|truncate(100, True)}}
 	<footer>

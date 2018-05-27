@@ -1,20 +1,11 @@
-{% extends './admin/base.html' %} {% block head %}
-<!-- include libraries(jQuery, bootstrap) -->
-<script src="summ/jquery.min.js"></script>
-<link href="summ/summernote-lite.css" rel="stylesheet">
-<script src="summ/summernote-lite.js"></script>
-<script src="/js/bootstrap.js"></script>
-
-<!-- <script type="text/javascript" src="assets/editor/lang/zh_CN.js"></script> -->
-
-
-{% endblock %} {% block main_body %}
+{% extends './admin/add_article.html' %} 
+{% block main_body %}
 <!-- MAIN -->
 <div class="main">
     <!-- MAIN CONTENT -->
     <div class="main-content">
         <div class="container-fluid">
-            <h3 class="page-title">文章</h3>
+            <h3 class="page-title"></h3>
             <div class="row">
                 <div class="col-md-12">
                     <!-- PANEL HEADLINE -->
@@ -64,9 +55,9 @@
                                         <input name="top" class="check-switch" type="checkbox" {% if content.top == 'on' %}checked{% endif %}> </div>
                                 </div>
                                 <div class="form-group">
-                                    <span for="show" class="col-sm-2 control-label">标签</span>
-                                    <div class="col-sm-4">
-                                        {% set list_tag=content.tag.split(',') %}
+                                    <span for="show" class="col-sm-1 control-label">标签</span>
+                                    <div class="col-sm-8">
+                                        <!-- {% set list_tag=content.tag.split(',') %}
                                        
                                         {% for tag in data_tag %}
                                             
@@ -74,7 +65,9 @@
                                                 
                                                 <input name='tag' class="check-tag" type="checkbox" value="{{tag.id}}" tag_name="{{tag.name}}" {% if tag.id|string in list_tag %}checked{% endif %}> 
                                             {% endif %} 
-                                        {% endfor %}
+                                        {% endfor %} -->
+                                        <input type="text" class="form-control" name="tag" id="tag" value="{{content.tag}}" placeholder="输入标签,按回车保存" />
+
 
 
 
@@ -134,19 +127,32 @@
 {% endblock %}
 <!-- END MAIN -->
 {% block scripts_bottom %}
+<!-- tagplugin -->
+<script type="text/javascript" src="tagplugin/dist/bootstrap-tokenfield.js" charset="UTF-8"></script>
+<script type="text/javascript" src="tagplugin/docs-assets/js/scrollspy.js" charset="UTF-8"></script>
+<script type="text/javascript" src="tagplugin/docs-assets/js/affix.js" charset="UTF-8"></script>
+<script type="text/javascript" src="tagplugin/docs-assets/js/typeahead.bundle.min.js" charset="UTF-8"></script>
+<script type="text/javascript" src="tagplugin/docs-assets/js/docs.min.js" charset="UTF-8"></script>
+<script src="summ/summernote-lite.js"></script>
 
+<!-- end tagplugin -->
+<!-- summplugin -->
 <script>
-
-    $('#summernote').summernote({
-        placeholder: '输入内容',
-        tabsize: 2,
-        height: 300,
-        callbacks:{
-            onImageUpload:function(files){
-                img=sendFile(files[0]);
+    $(document).ready(function(){
+        $('#tag').tokenfield();
+        $('#summernote').summernote({
+            placeholder: '输入内容',
+            tabsize: 2,
+            height: 300,
+            callbacks:{
+                onImageUpload:function(files){
+                    img=sendFile(files[0]);
+                }
             }
-        }
+        });
+
     });
+    
     
     function sendFile(files){
         data=new FormData();

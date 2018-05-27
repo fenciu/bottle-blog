@@ -1,11 +1,20 @@
 {% extends './admin/base.html' %} {% block head %}
 <!-- include libraries(jQuery, bootstrap) -->
-<script src="summ/jquery.min.js"></script>
 <link href="summ/summernote-lite.css" rel="stylesheet">
-<script src="summ/summernote-lite.js"></script>
-<script src="/js/bootstrap.js"></script>
 
-<!-- <script type="text/javascript" src="assets/editor/lang/zh_CN.js"></script> -->
+<!-- Bootstrap styling for Typeahead -->
+<link href="tagplugin/dist/css/tokenfield-typeahead.min.css" type="text/css" rel="stylesheet">
+<!-- Tokenfield CSS -->
+<link href="tagplugin/dist/css/bootstrap-tokenfield.min.css" type="text/css" rel="stylesheet">
+<!-- Docs CSS -->
+<link href="tagplugin/docs-assets/css/pygments-manni.css" type="text/css" rel="stylesheet">
+<link href="tagplugin/docs-assets/css/docs.css" type="text/css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/respond.js/1.2.0/respond.min.js"></script>
+<![endif]-->
+
 
 
 {% endblock %} {% block main_body %}
@@ -14,7 +23,7 @@
     <!-- MAIN CONTENT -->
     <div class="main-content">
         <div class="container-fluid">
-            <h3 class="page-title">文章</h3>
+            <h3 class="page-title"></h3>
             <div class="row">
                 <div class="col-md-12">
                     <!-- PANEL HEADLINE -->
@@ -62,11 +71,16 @@
                                     <div class="col-sm-4">
                                         <input name="top" class="check-switch" type="checkbox"> </div>
                                 </div>
-                                <div class="form-group">
-                                    <span for="show" class="col-sm-2 control-label">标签</span>
-                                    <div class="col-sm-4">
-                                        {% for tag in data_tag %} {% if tag.id!=-1 %}
-                                        <input name='tag' class="check-tag" type="checkbox" value="{{tag.id}}" tag_name="{{tag.name}}"> {% endif %} {% endfor %}
+                                <div class="form-group" >
+                                    <span for="show" class="col-sm-1 control-label">标签</span>
+                                    <div class="col-sm-8">
+                                        <!-- {% for tag in data_tag %} {% if tag.id!=-1 %}
+                                        <input name='tag' class="check-tag" type="checkbox" value="{{tag.id}}" tag_name="{{tag.name}}"> {% endif %} {% endfor %} -->
+                                        
+                                          
+                                        <input type="text" class="form-control" name="tag" id="tag" value="" placeholder="输入标签,按回车保存" />
+                                       
+                                        
 
 
 
@@ -126,18 +140,33 @@
 {% endblock %}
 <!-- END MAIN -->
 {% block scripts_bottom %}
+<!-- tagplugin -->
+<script type="text/javascript" src="tagplugin/dist/bootstrap-tokenfield.min.js" charset="UTF-8"></script>
+<script type="text/javascript" src="tagplugin/docs-assets/js/scrollspy.js" charset="UTF-8"></script>
+<script type="text/javascript" src="tagplugin/docs-assets/js/affix.js" charset="UTF-8"></script>
+<script type="text/javascript" src="tagplugin/docs-assets/js/typeahead.bundle.min.js" charset="UTF-8"></script>
+<script type="text/javascript" src="tagplugin/docs-assets/js/docs.min.js" charset="UTF-8"></script>
+<script src="summ/summernote-lite.js"></script>
 
+<!-- end tagplugin -->
+<!-- summplugin -->
 <script>
-    $('#summernote').summernote({
-        placeholder: '输入内容',
-        tabsize: 2,
-        height: 300,
-        callbacks:{
-            onImageUpload:function(files){
-                img=sendFile(files[0]);
+    $(document).ready(function(){
+        $('#tag').tokenfield();
+        
+        $('#summernote').summernote({
+            placeholder: '输入内容',
+            tabsize: 2,
+            height: 300,
+            callbacks:{
+                onImageUpload:function(files){
+                    img=sendFile(files[0]);
+                }
             }
-        }
+        });
+
     });
+    
     
     function sendFile(files){
         data=new FormData();
@@ -162,6 +191,7 @@
 
 
     }
+    
     function post_article(){
         $.ajax({
             data:$('#post_article').serialize(),
@@ -186,5 +216,4 @@
 </script>
 
 
-</script>
 {% endblock %}

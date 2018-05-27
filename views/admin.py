@@ -10,16 +10,7 @@ admin.install(setting.db)
 BaseTemplate.defaults['urls']=admin.get_url
 TEMPLATES.clear()
 
-##后台cookie检测
-def check_login(db,request):
-    if request.get_cookie("id",secret="2018")==None:
-        redirect('/admin/login/')
-    else:         
-        re=request.get_cookie("id",secret="2018")
-        re1,re2=re.split(':', 1 )
-        fetch_data=db.default.Conadmin.filter(username=re1,userpass=re2).select('id').first()
-        if not fetch_data:
-            redirect('/admin/login/')
+
 
 #登陆界面
 @admin.get('/login/',name='login_url')
@@ -72,9 +63,9 @@ def add_article(db):
 def modify_article(id,db):
     setting.check_login(db,request)
     data=db.default.post.filter(id=id).first()
-    data_tag=db.default.tag.select('*')
+    print(data)
     data_classify=db.default.classify.select('*')
-    return template('./admin/modify.html',content=data,data_tag=data_tag,data_classify=data_classify)
+    return template('./admin/modify.html',content=data,data_classify=data_classify)
 #接受修改文章
 @admin.post('/article/modify=<id:int>',name='modify_url')
 def modify_article(id,db):
@@ -83,12 +74,6 @@ def modify_article(id,db):
     for pro in request.forms:
         post_dict[pro]=getattr(request.forms,pro)
         print(pro+":"+getattr(request.forms,pro))
-      
-    if 'tag' in request.forms.dict.keys():
-        tag_str=','.join(request.forms.dict['tag'])
-        post_dict['tag']=tag_str
-
-
     if post_dict['post_time']=='':
         del post_dict['post_time']
     
@@ -97,6 +82,10 @@ def modify_article(id,db):
     post_list=[]
     post_list.append(post_dict)
     data_update=db.default.post.filter(id=id).bulk_update(post_list)
+    if data_update:
+        pass
+    else:
+        return abort(code=404)
 
     
 #分类
@@ -124,12 +113,6 @@ def add_article(db):
     for pro in request.forms:
         post_dict[pro]=getattr(request.forms,pro)
         print(pro+":"+getattr(request.forms,pro))
-    print(type(request.forms.dict))   
-    if 'tag' in request.forms.dict.keys():
-        tag_str=','.join(request.forms.dict['tag'])
-        post_dict['tag']=tag_str
-
-
     if post_dict['post_time']=='':
         del post_dict['post_time']
     
@@ -138,6 +121,10 @@ def add_article(db):
     post_list=[]
     post_list.append(post_dict)
     data_create=db.default.post.bulk_create(post_list)
+    if data_create:
+        pass
+    else:
+        return abort(code=404)
     
     
 
