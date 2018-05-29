@@ -45,11 +45,17 @@ def index(db):
     return template('./admin/index.html',act_index='active')
 
 #后台文章页
+@admin.get('/page/<count:int>',name='page_url')
 @admin.get('/article/',name='article_url')
-def article(db):
+def article(db,count=1):
     setting.check_login(db,request)
     data=db.default.post.select('*')
-    return template('./admin/article.html',article=data,act_article='active')
+    page_all=data.count()
+    page_data=data[(count-1)*10:count*10]
+    max_page=page_all/10 if (page_all%10==0) else page_all//10+1
+    print(max_page)
+    return template('./admin/article.html',article=page_data,act_article='active',page=max_page)
+
 #添加文章
 @admin.get('/article/add',name='add_article_url')
 def add_article(db):
