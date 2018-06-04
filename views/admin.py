@@ -8,9 +8,6 @@ admin=Bottle()
 admin.install(setting.db)
 
 BaseTemplate.defaults['urls']=admin.get_url
-TEMPLATES.clear()
-
-
 
 #登陆界面
 @admin.get('/login/',name='login_url')
@@ -101,10 +98,15 @@ def teclassify(db):
     return template('./admin/classify.html' ,act_classify='active')
 
 #标签
-@admin.get('/tag/',name='tag_url')
-def tag(db):
-    setting.check_login(db,request)
-    return template('./admin/tag.html',act_tag='active')
+# @admin.get('/tag/',name='tag_url')
+# def tag(db):
+#     setting.check_login(db,request)
+#     return template('./admin/tag.html',act_tag='active')
+
+#个人页面
+@admin.get('/profile/',name='profile_url')
+def profile():
+    return template('./admin/profile.html',act_profile='active')
 
 
 
